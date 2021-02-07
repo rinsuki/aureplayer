@@ -14,13 +14,33 @@ enum LoadState {
     SUCCESS = 4,
 }
 
+async function getReplayURL() {
+    const params = new URL(location.href).searchParams
+    switch (params.get("server")) {
+    case "cdn.rinsuki.net": {
+        const ver = params.get("v")
+        if (ver !== "1") throw `invalid v`
+        const id = params.get("id")
+        if (id == null) throw `id is invalid`
+        const result = /^([a-z0-9]{1,20})\.(2[0-9]{7})\.([0-9]{6}\.[0-9a-f]{8})$/.exec(id)
+        if (result == null) throw `id is invalid`
+        const [_, user, day] = result
+        return `https://cdn.rinsuki.net/internal/aureplayer/v${ver}/${user}/${day}/replay.v${ver}.${id}.msgpack.gz`
+    }
+    case "local":
+        return "replay.msgpack.gz"
+    default:
+        throw "unknown server"
+    }
+}
+
 function Loader() {
     const [loadState, setLoadState] = useState(LoadState.FETCH)
     const [data, setData] = useState<Data | undefined>(undefined)
     const [resConfig, setResConfig] = useState<ResConfig | undefined>(undefined)
     useEffect(() => {
         Promise.all([
-            fetch("./replay.msgpack.gz").then(async r => {
+            getReplayURL().then(url => fetch(url)).then(async r => {
                 if (r.status >= 400) throw `Server returned invalid status code (${r.status})`
                 setLoadState(LoadState.DOWNLOADING)
                 const gzippedData = await r.arrayBuffer()

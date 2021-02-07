@@ -14,7 +14,7 @@ export const COLORS = [
     "LightGreen",
 ]
 
-export const USE_HQ_MAP = true
+export const USE_HQ_MAP = location.search.includes("&map=hq")
 
 export function replaceToHQURL(path: string) {
     return USE_HQ_MAP ? path.replace("res/", "res_hq/") : path

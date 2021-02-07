@@ -55,5 +55,9 @@ export const Controls = observer(() => {
 
             </div>
         </div>
+        <div className="credits">
+            AUReplayer | 
+            GitHub: <a href="https://github.com/rinsuki/aureplayer" target="_blank">rinsuki/aureplayer</a>.
+        </div>
     </div>
 })
