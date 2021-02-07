@@ -1,0 +1,48 @@
+.controls {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    width: calc(100% - calc(8px * 2));
+    margin: 8px;
+    box-sizing: border-box;
+    background: rgba(0, 0, 0, 0.9);
+    color: white;
+    padding: 8px;
+    border-radius: 8px;
+
+    .seekbar {
+        background: white;
+        height: 6px;
+        position: relative;
+        .now {
+            background: #35f;
+            height: 100%;
+        }
+        .meeting {
+            position: absolute;
+            top: 0;
+            height: 100%;
+            background: rgba(255, 192, 64, .5);
+        }
+    }
+    
+    .buttons {
+        text-align: center;
+        padding: 0.5em;
+        display: flex;
+        line-height: 1.5em;
+        > * {
+            flex: 1;
+        }
+        .left {
+            text-align: left;
+        }
+        .center {
+            text-align: center;
+        }
+        .right {
+            text-align: right;
+        }
+    }
+}

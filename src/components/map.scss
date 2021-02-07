@@ -1,0 +1,9 @@
+.map {
+    flex: 1;
+    position: relative;
+    background: black;
+    
+    .player {
+        position: absolute;
+    }
+}
