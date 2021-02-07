@@ -22,10 +22,10 @@ async function getReplayURL() {
         if (ver !== "1") throw `invalid v`
         const id = params.get("id")
         if (id == null) throw `id is invalid`
-        const result = /^([a-z0-9]{1,20})\.(2[0-9]{7})\.([0-9]{6}\.[0-9a-f]{8})$/.exec(id)
+        const result = /^([a-z0-9]{1,20})\.(2[0-9]{3})([0-9]{2})([0-9]{2})\.([0-9]{6}\.[0-9a-f]{8})$/.exec(id)
         if (result == null) throw `id is invalid`
-        const [_, user, day] = result
-        return `https://cdn.rinsuki.net/internal/aureplayer/v${ver}/${user}/${day}/replay.v${ver}.${id}.msgpack.gz`
+        const [_, user, year, month, day] = result
+        return `https://cdn.rinsuki.net/internal/aureplayer/v${ver}/${user}/${year}/${month}/${day}/replay.v${ver}.${id}.msgpack.gz`
     }
     case "local":
         return "replay.msgpack.gz"
