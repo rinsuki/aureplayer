@@ -33,7 +33,16 @@ export const Controls = observer(() => {
     }, [data.events])
 
     return <div className="controls">
-        <div className="seekbar">
+        <div className="seekbar"
+            onPointerDown={e => {
+                e.currentTarget.setPointerCapture(e.pointerId)
+            }}
+            onPointerMove={e => {
+                if (!e.currentTarget.hasPointerCapture(e.pointerId)) return
+                const rect = e.currentTarget.getBoundingClientRect()
+                state.absoluteSeek(Math.min(((e.clientX - rect.left) / rect.width) * data.duration, data.duration))
+            }}
+        >
             <div className="now" style={{width: `${(state.currentSeconds * 100)/ data.duration}%`}} />
             {...meetings.map(meeting => {
                 return <div className="meeting" key={`${meeting.start}-${meeting.end}`} style={{
