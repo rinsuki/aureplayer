@@ -112,11 +112,17 @@ function useMap() {
                     y: 0
                 }
                 let lastMove: DataMove | undefined
-                let deadTimestamp = 0
+                let deadBodyPosition: {x: number, y: number} | null = null
                 for (const move of data.moves) {
                     if (move.player !== id) continue
                     if (move.timestamp > state.currentSeconds) break
                     if (lastMove != null && move.seq < lastMove.seq) continue
+                    if (player.dead_at != null && deadBodyPosition == null && lastMove != null && move.timestamp > player.dead_at) {
+                        deadBodyPosition = {
+                            x: lastMove.position.x,
+                            y: lastMove.position.y,
+                        }
+                    }
                     lastMove = move
                 }
                 if (lastMove != null) {
@@ -124,10 +130,48 @@ function useMap() {
                     position.x = lastMove.position.x + lastMove.velocity.x * second
                     position.y = lastMove.position.y + lastMove.velocity.y * second
                 }
+                if (deadBodyPosition != null) {
+                    // 死体が本当に描画されるべきか？
+                    // 死体発生から今までに通報があったら描画しない
+                    // TODO: これだとちゃんと吊り時の死体を処理できないはずだができている？
+                    //       要調査
+                    for (const event of data.events) {
+                        if (event.timestamp > state.currentSeconds) break
+                        if (event.type !== "start_meeting") continue
+                        if (player.dead_at! < event.timestamp) {
+                            deadBodyPosition = null
+                            break
+                        }
+                    }
+                }
+                position = posConverter(position)
+
+                if (deadBodyPosition != null) {
+                    deadBodyPosition = posConverter(deadBodyPosition)
+                    // 死体描画
+                    const image = getImage(`res/body/${COLORS.indexOf(player.color)}.png`)
+                    const width = resMap.body_pixel_width * s.scale * pixelRatio
+                    const height = image.width ? width * (image.height / image.width) : 1
+                    ctx.drawImage(
+                        image,
+                        ((s.x + (deadBodyPosition.x * s.scale)) * pixelRatio) - (width / 2),
+                        ((s.y + (deadBodyPosition.y * s.scale)) * pixelRatio) - height,
+                        width, height,
+                    )
+                    const time = Math.floor(state.currentSeconds - player.dead_at!)
+                    const text = `${Math.floor(time/60).toString().padStart(2, "0")}:${(time%60).toString().padStart(2, "0")}`
+                    ctx.font = `${15*pixelRatio}px sans-serif`
+                    const metrics = ctx.measureText(text)
+                    ctx.fillText(
+                        text,
+                        ((s.x + (deadBodyPosition.x * s.scale)) * pixelRatio) - metrics.width / 2,
+                        // actualBoundingBoxDescent を引かないと y の下とかがはみ出る
+                        ((s.y + (deadBodyPosition.y * s.scale)) * pixelRatio) - height - metrics.actualBoundingBoxDescent 
+                    )
+                }
+
                 const isDead = player.dead_at != null && player.dead_at < state.currentSeconds
                 ctx.globalAlpha = isDead ? 0.5 : 1
-
-                position = posConverter(position)
 
                 const image = getImage(`res/${isDead ? "ghost" : "player"}/${COLORS.indexOf(player.color)}.png`)
                 const width = (isDead ? resMap.ghost_pixel_width : resMap.body_pixel_width) * s.scale * pixelRatio
