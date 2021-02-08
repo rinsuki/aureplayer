@@ -90,6 +90,13 @@ export const Events: React.FC<{}> = () => {
     const data = useContext(DataContext)
     return <div className="events">
         <div className="event-start">{new Date(data.started_at * 1000).toLocaleString()}に開始</div>
+        <div className="members">
+            <p>インポスター ({data.impostors.length}):</p>
+            {...data.impostors.map(i => <Player id={i} timestamp={0}/>)}
+            <p>クルーメイト ({data.players.length - data.impostors.length}):</p>
+            {...data.players.map((_, i) => data.impostors.includes(i) ? null : <Player id={i} timestamp={0}/>)}
+            <p>の計{data.players.length}人でスタート</p>
+        </div>
         {data.events.map((event, i) => {
             const beforeTimestamp = i === 0 ? 0 : data.events[i-1].timestamp
             const diff = Math.floor(event.timestamp - beforeTimestamp)

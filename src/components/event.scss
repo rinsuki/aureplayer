@@ -1,3 +1,25 @@
+.events {
+    .player {
+        margin: 1px;
+        border: 1px solid #000;
+        display: inline-flex;
+        vertical-align: middle;
+        align-items: center;
+        font-weight: normal;
+
+        &-impostor {
+            color: #c00;
+        }
+
+        &-icon {
+            height: 2em;
+        }
+
+        &-name {
+            padding-right: 0.25em;
+        }
+    }
+}
 .event {
     border: 1px solid #888;
     padding: 4px;
@@ -25,26 +47,6 @@
     }
     &.event-vote-finish tbody td:first-child {
         text-align: right;
-    }
-
-    .player {
-        border: 1px solid #000;
-        display: inline-flex;
-        vertical-align: middle;
-        align-items: center;
-        font-weight: normal;
-
-        &-impostor {
-            color: #c00;
-        }
-
-        &-icon {
-            height: 2em;
-        }
-
-        &-name {
-            padding-right: 0.25em;
-        }
     }
 }
 
