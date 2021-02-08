@@ -88,15 +88,20 @@ export function endReasonToString(endReason: DataEndReason): string {
 
 export const DataContext = createContext<Data>(undefined as any /* FAKE */)
 
+export interface ResConfigMap {
+    path: string
+    center: [number, number]
+    calibration: {
+        game_pos: [[number, number], [number, number]]
+        texture_pos: [[number, number], [number, number]]
+    }
+    player_pixel_width: number
+    ghost_pixel_width: number
+    body_pixel_width: number
+}
+
 export interface ResConfig {
-    maps: {
-        path: string,
-        center: [number, number]
-        calibration: {
-            game_pos: [[number, number], [number, number]]
-            texture_pos: [[number, number], [number, number]]
-        }
-    }[]
+    maps: ResConfigMap[]
 }
 
 export const ResConfigContext = createContext<ResConfig>(undefined as any)
