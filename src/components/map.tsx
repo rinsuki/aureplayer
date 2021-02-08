@@ -72,7 +72,9 @@ function useMap() {
         drag: null as ({
             x: number,
             y: number,
-        } | null)
+        } | null),
+        drawCount: 0,
+        fps: 0,
     })
     getImage(resMap.path).onload = e => {
         const img = e.target as HTMLImageElement
@@ -80,10 +82,18 @@ function useMap() {
     }
     const [pixelRatio, setPixelRatio] = useState(devicePixelRatio)
     const posConverter = usePosConverter(resMap)
+    useEffect(() => {
+        const timer = setInterval(() => {
+            canvasState.current.fps = canvasState.current.drawCount
+            canvasState.current.drawCount = 0
+        }, 1000)
+        return () => {
+            clearInterval(timer)
+        }
+    }, [])
 
     return [
         useCanvas((canvas, ctx) => {
-            const start = performance.now()
             if (pixelRatio !== devicePixelRatio) setPixelRatio(devicePixelRatio)
             ctx.clearRect(0, 0, canvas.width, canvas.height)
             const s = canvasState.current
@@ -143,7 +153,9 @@ function useMap() {
             ctx.fillText(`x=${s.x}`, 0, 10 * pixelRatio)
             ctx.fillText(`y=${s.y}`, 0, 20 * pixelRatio)
             ctx.fillText(`scale=${s.scale}`, 0, 30 * pixelRatio)
-            ctx.fillText(`ms=${performance.now() - start}`, 0, 100 * pixelRatio)
+            ctx.fillText(`pixelRatio=${pixelRatio}`, 0, 40 * pixelRatio)
+            ctx.fillText(`fps=${s.fps}`, 0, 50 * pixelRatio)
+            s.drawCount++
         }, [
             pixelRatio,
             posConverter,
@@ -181,7 +193,7 @@ export const GameMap = observer(() => {
             style={{position: "absolute", width: `${width}px`, height: `${height}px`, cursor: "grab"}}
 
             onWheel = {e => {
-                const scaleStep = - (e.deltaY * 0.01)
+                const scaleStep = Math.max(-0.05, Math.min(0.05, -(e.deltaY * 0.01)))
                 const oldScale = state.current.scale
                 state.current.scale = oldScale + scaleStep
                 state.current.x -= ((e.nativeEvent.offsetX - state.current.x) / oldScale) * scaleStep
