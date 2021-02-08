@@ -74,6 +74,10 @@ function useMap() {
             y: number,
         } | null)
     })
+    getImage(resMap.path).onload = e => {
+        const img = e.target as HTMLImageElement
+        canvasState.current.scale = window.innerWidth / img.width
+    }
     const [pixelRatio, setPixelRatio] = useState(devicePixelRatio)
     const posConverter = usePosConverter(resMap)
 
