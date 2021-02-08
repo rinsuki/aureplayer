@@ -4,7 +4,7 @@ https://aureplayer.rinsuki.vercel.app/
 
 Replay Among Us Session recorded by (TODO: publish replay capture tool).
 
-NOTE: This tool hasn't compatibility with `.aurp` file such as recorded by https://github.com/Smertig/among-us-replay-mod
+NOTE: This tool **hasn't** compatibility with `.aurp` file such as recorded by https://github.com/Smertig/among-us-replay-mod
 
 ## LICENSE
 
