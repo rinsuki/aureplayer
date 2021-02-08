@@ -42,12 +42,13 @@ const EventContent: React.FC<{event: DataEvent}> = ({event}) => {
             <Player id={event.player} timestamp={event.timestamp} /> がベント退出
         </div>
     case "start_meeting":
+        const diff_seconds = Math.floor(event.dead_body == null ? 0 : event.timestamp - (data.players[event.dead_body].dead_at ?? 0))
         return <div className="event event-start-meeting">
             <TimestampLink timestamp={event.timestamp} />
             <Player id={event.player} timestamp={event.timestamp} /> がミーティング開始 ({
                 event.dead_body == null
                 ? "エマージェンシーボタン"
-                : <><Player id={event.dead_body} timestamp={event.timestamp} />の死体を発見</>
+                : <><Player id={event.dead_body} timestamp={event.timestamp} />の死体を発見、死亡から{diff_seconds > 60 ? `${Math.floor(diff_seconds / 60)}分${diff_seconds%60}秒` : `${diff_seconds}秒`}後</>
             })
         </div>
     case "vote_finish":
