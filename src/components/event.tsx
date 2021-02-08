@@ -92,9 +92,9 @@ export const Events: React.FC<{}> = () => {
         <div className="event-start">{new Date(data.started_at * 1000).toLocaleString()}に開始</div>
         <div className="members">
             <p>インポスター ({data.impostors.length}):</p>
-            {...data.impostors.map(i => <Player id={i} timestamp={0}/>)}
+            {...data.impostors.map(i => <Player id={i} key={i} timestamp={0}/>)}
             <p>クルーメイト ({data.players.length - data.impostors.length}):</p>
-            {...data.players.map((_, i) => data.impostors.includes(i) ? null : <Player id={i} timestamp={0}/>)}
+            {...data.players.map((_, i) => data.impostors.includes(i) ? null : <Player id={i} key={i} timestamp={0}/>)}
             <p>の計{data.players.length}人でスタート</p>
         </div>
         {data.events.map((event, i) => {
