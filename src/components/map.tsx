@@ -125,6 +125,7 @@ function useMap() {
                     position.y = lastMove.position.y + lastMove.velocity.y * second
                 }
                 const isDead = player.dead_at != null && player.dead_at < state.currentSeconds
+                ctx.globalAlpha = isDead ? 0.5 : 1
 
                 position = posConverter(position)
 
@@ -146,6 +147,7 @@ function useMap() {
                     // actualBoundingBoxDescent を引かないと y の下とかがはみ出る
                     ((s.y + (position.y * s.scale)) * pixelRatio) - height - metrics.actualBoundingBoxDescent 
                 )
+                ctx.globalAlpha = 1
             }
             // stats描画
             ctx.fillStyle = "white"
