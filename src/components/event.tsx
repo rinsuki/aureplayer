@@ -66,6 +66,7 @@ const EventContent: React.FC<{event: DataEvent}> = ({event}) => {
                 <tbody>
                 {...event.states.map((state, player_id) => {
                     if (state.is_dead) return null
+                    if (data.players.length <= player_id) return null
                     return <tr key={player_id}>
                         <td><Player id={player_id} timestamp={event.timestamp} /></td>
                         <td>{state.voted_for != null ? <Player id={state.voted_for} timestamp={event.timestamp} /> : "スキップ"}</td>
