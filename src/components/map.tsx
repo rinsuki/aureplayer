@@ -160,6 +160,7 @@ function useMap() {
                     )
                     const time = Math.floor(state.currentSeconds - player.dead_at!)
                     const text = `${Math.floor(time/60).toString().padStart(2, "0")}:${(time%60).toString().padStart(2, "0")}`
+                    ctx.fillStyle = "white"
                     ctx.font = `${15*pixelRatio}px sans-serif`
                     const metrics = ctx.measureText(text)
                     ctx.fillText(
