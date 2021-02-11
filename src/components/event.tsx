@@ -6,7 +6,7 @@ import "./event.scss"
 
 const Player: React.FC<{id: number, timestamp: number}> = ({id, timestamp}) => {
     const data = useContext(DataContext)
-    const player = data.players[id]
+    const player = data.players.find((player, i) => (player.id ?? i) === id)
     if (player == null) return <>{`Invalid Player ID: ${id}`}</>
     const isImpostor = data.impostors.includes(id)
     const isDead = player.dead_at == null ? false : player.dead_at < timestamp
@@ -42,7 +42,8 @@ const EventContent: React.FC<{event: DataEvent}> = ({event}) => {
             <Player id={event.player} timestamp={event.timestamp} /> がベント退出
         </div>
     case "start_meeting":
-        const diff_seconds = Math.floor(event.dead_body == null ? 0 : event.timestamp - (data.players[event.dead_body].dead_at ?? 0))
+        const dead_player = event.dead_body == null ? null : data.players.find((player, i) => (player.id ?? i) === event.dead_body)
+        const diff_seconds = Math.floor(dead_player == null ? 0 : event.timestamp - (dead_player.dead_at ?? 0))
         return <div className="event event-start-meeting">
             <TimestampLink timestamp={event.timestamp} />
             <Player id={event.player} timestamp={event.timestamp} /> がミーティング開始 ({
@@ -66,7 +67,7 @@ const EventContent: React.FC<{event: DataEvent}> = ({event}) => {
                 <tbody>
                 {...event.states.map((state, player_id) => {
                     if (state.is_dead) return null
-                    if (data.players.length <= player_id) return null
+                    if (data.players.find((p, i) => (p.id ?? i) === player_id) == null) return null
                     return <tr key={player_id}>
                         <td><Player id={player_id} timestamp={event.timestamp} /></td>
                         <td>{state.voted_for != null ? <Player id={state.voted_for} timestamp={event.timestamp} /> : "スキップ"}</td>
@@ -96,7 +97,10 @@ export const Events: React.FC<{}> = () => {
             <p>インポスター ({data.impostors.length}):</p>
             {...data.impostors.map(i => <Player id={i} key={i} timestamp={0}/>)}
             <p>クルーメイト ({data.players.length - data.impostors.length}):</p>
-            {...data.players.map((_, i) => data.impostors.includes(i) ? null : <Player id={i} key={i} timestamp={0}/>)}
+            {...data.players.map((p, i) => {
+                const id = p.id ?? i
+                data.impostors.includes(id) ? null : <Player id={id} key={i} timestamp={0}/>
+            })}
             <p>の計{data.players.length}人でスタート</p>
         </div>
         {data.events.map((event, i) => {

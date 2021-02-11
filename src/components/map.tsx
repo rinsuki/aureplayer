@@ -106,7 +106,8 @@ function useMap() {
             s.y = Math.min(canvas.height / pixelRatio / 2, Math.max(s.y, (-mapImage.height * s.scale) + (canvas.height / pixelRatio / 2)))
             ctx.drawImage(mapImage, s.x * pixelRatio, s.y * pixelRatio, mapImage.width * s.scale * pixelRatio, mapImage.height * s.scale * pixelRatio)
             // プレーヤー描画
-            for (const [id, player] of data.players.entries()) {
+            for (const [index, player] of data.players.entries()) {
+                const id = player.id ?? index
                 let position = {
                     x: 0,
                     y: 0

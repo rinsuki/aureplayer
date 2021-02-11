@@ -35,6 +35,7 @@ export type DataEvent = { timestamp: number } & ({
 export type DataColor = "Red" | "Blue" | "Green" | "Pink" | "Orange" | "Yellow" | "Grey" | "White" | "Purple" | "Brown" | "Cyan" | "LightGreen"
 
 export interface DataPlayer {
+    id: number | undefined
     name: string
     color: DataColor
     dead_at: number | null
