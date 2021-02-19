@@ -99,7 +99,7 @@ export const Events: React.FC<{}> = () => {
             <p>クルーメイト ({data.players.length - data.impostors.length}):</p>
             {...data.players.map((p, i) => {
                 const id = p.id ?? i
-                data.impostors.includes(id) ? null : <Player id={id} key={i} timestamp={0}/>
+                return data.impostors.includes(id) ? null : <Player id={id} key={i} timestamp={0}/>
             })}
             <p>の計{data.players.length}人でスタート</p>
         </div>
