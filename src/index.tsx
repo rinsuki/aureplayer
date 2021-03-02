@@ -62,10 +62,17 @@ function Loader() {
                 setLoadState(LoadState.DOWNLOADING)
                 const gzippedData = await r.arrayBuffer()
                 setLoadState(LoadState.DEFLATE)
-                const msgpackData = pako.inflate(new Uint8Array(gzippedData))
-                console.log(`Inflate ${gzippedData.byteLength} bytes -> ${msgpackData.byteLength} bytes (${msgpackData.byteLength/gzippedData.byteLength}x)`)
-                setLoadState(LoadState.MSGPACK_DECODE)
-                const res = msgpack.decode(msgpackData)
+                async function decode() {
+                    if (new Uint8Array(gzippedData)[0] == "{".charCodeAt(0)) { // json
+                        return JSON.parse(new TextDecoder().decode(gzippedData))
+                    } else { // msgpack
+                        const msgpackData = pako.inflate(new Uint8Array(gzippedData))
+                        console.log(`Inflate ${gzippedData.byteLength} bytes -> ${msgpackData.byteLength} bytes (${msgpackData.byteLength/gzippedData.byteLength}x)`)
+                        setLoadState(LoadState.MSGPACK_DECODE)
+                        return msgpack.decode(msgpackData)
+                    }
+                }
+                const res = await decode()
                 setLoadState(LoadState.SUCCESS)
                 console.log(res)
                 // preload images
