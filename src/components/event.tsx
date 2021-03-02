@@ -65,9 +65,11 @@ const EventContent: React.FC<{event: DataEvent}> = ({event}) => {
                     <Player id={event.exiled} timestamp={event.timestamp} />を処刑
                 </>}</strong></th></tr></tfoot>
                 <tbody>
-                {...event.states.map((state, player_id) => {
-                    if (state.is_dead) return null
-                    if (data.players.find((p, i) => (p.id ?? i) === player_id) == null) return null
+                {...event.states.map((state, player_id_) => {
+                    const player_id = state.id ?? player_id_
+                    const player = data.players.find((p, i) => (p.id ?? i) === player_id)
+                    if (player == null) return null
+                    if (player.dead_at != null && player.dead_at > event.timestamp) return null
                     return <tr key={player_id}>
                         <td><Player id={player_id} timestamp={event.timestamp} /></td>
                         <td>{state.voted_for != null ? <Player id={state.voted_for} timestamp={event.timestamp} /> : "スキップ"}</td>

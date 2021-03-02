@@ -20,9 +20,9 @@ export type DataEvent = { timestamp: number } & ({
     is_tie: boolean,
     exiled: number | null,
     states: {
+        id: number | undefined,
         did_report: boolean,
         did_vote: boolean,
-        is_dead: boolean,
         voted_for: number | null,
     }[]
 } | {
