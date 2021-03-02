@@ -69,10 +69,10 @@ const EventContent: React.FC<{event: DataEvent}> = ({event}) => {
                     const player_id = state.id ?? player_id_
                     const player = data.players.find((p, i) => (p.id ?? i) === player_id)
                     if (player == null) return null
-                    if (player.dead_at != null && player.dead_at > event.timestamp) return null
+                    if (player.dead_at != null && player.dead_at < event.timestamp) return null
                     return <tr key={player_id}>
                         <td><Player id={player_id} timestamp={event.timestamp} /></td>
-                        <td>{state.voted_for != null ? <Player id={state.voted_for} timestamp={event.timestamp} /> : "スキップ"}</td>
+                        <td>{state.voted_for != null ? <Player id={state.voted_for} timestamp={event.timestamp} /> : state.did_vote ? "スキップ" : "(無投票)"}</td>
                     </tr>
                 })}
                 </tbody>
