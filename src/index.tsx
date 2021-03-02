@@ -29,6 +29,23 @@ async function getReplayURL() {
     }
     case "local":
         return "replay.msgpack.gz"
+    case "input-file":
+        return await new Promise<string>(resolve => {
+            const input = document.createElement("input")
+            document.body.appendChild(input)
+            input.style.position = "fixed"
+            input.style.left = "0"
+            input.style.top = "0"
+            input.style.width = "100%"
+            input.style.height = "100%"
+            input.style.background = "white"
+            input.type = "file"
+            input.onchange = async e => {
+                input.remove()
+                resolve(URL.createObjectURL(new Blob([await input.files!.item(0)!.arrayBuffer()])))
+            }
+            input.click()
+        })
     default:
         throw "unknown server"
     }
