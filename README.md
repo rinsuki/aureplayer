@@ -2,7 +2,7 @@
 
 https://aureplayer.rinsuki.vercel.app/
 
-Replay Among Us Session recorded by (TODO: publish replay capture tool).
+Replay Among Us Session recorded by AUEtherCapture https://github.com/rinsuki/AUEtherCapture .
 
 NOTE: This tool **hasn't** compatibility with `.aurp` file such as recorded by https://github.com/Smertig/among-us-replay-mod
 
